@@ -1,0 +1,35 @@
+# Material criptográfico y datos generados por los scripts
+network/organizations/
+network/channel-artifacts/
+network/as-tls/
+network/coordinator-tls/
+secrets/
+data/
+python/data/
+
+# Build y dependencias
+**/target/
+**/*.class
+chaincode/flprotocol/build/
+chaincode/flprotocol/.gradle/
+**/.venv/
+**/__pycache__/
+*.pyc
+**/.pytest_cache/
+*.egg-info/
+
+# Portal
+portal/frontend/node_modules/
+portal/frontend/.next/
+portal/frontend/tsconfig.tsbuildinfo
+portal/portal-data/
+portal/backend/secrets/
+portal/backend/network/
+
+# Editor y sistema operativo
+.claude/
+.idea/
+.vscode/
+*.iml
+.DS_Store
+*.log

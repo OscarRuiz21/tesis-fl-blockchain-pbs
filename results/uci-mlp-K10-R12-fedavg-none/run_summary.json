@@ -1,0 +1,120 @@
+{
+  "experimentLabel" : "uci-mlp-K10-R12-fedavg-none",
+  "k" : 10,
+  "totalRounds" : 12,
+  "strategy" : "fedavg",
+  "anonymityMode" : "none",
+  "seed" : 42,
+  "startedAt" : "2026-07-03T03:37:33.167634335Z",
+  "finishedAt" : "2026-07-03T03:39:51.753420594Z",
+  "clientsCompleted" : 10,
+  "clientsFailed" : 0,
+  "totalSeconds" : 138.585,
+  "roundsCompleted" : 12,
+  "finalAccuracy" : 0.817833,
+  "finalLoss" : 0.442099,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.778833,
+    "loss" : 0.51954,
+    "evalTimeMs" : 2556,
+    "timestamp" : "2026-07-03T03:37:52.670172344Z"
+  }, {
+    "round" : 2,
+    "accuracy" : 0.778833,
+    "loss" : 0.497456,
+    "evalTimeMs" : 2343,
+    "timestamp" : "2026-07-03T03:38:03.260598419Z"
+  }, {
+    "round" : 3,
+    "accuracy" : 0.8055,
+    "loss" : 0.46298,
+    "evalTimeMs" : 2840,
+    "timestamp" : "2026-07-03T03:38:14.547802007Z"
+  }, {
+    "round" : 4,
+    "accuracy" : 0.806833,
+    "loss" : 0.454376,
+    "evalTimeMs" : 2595,
+    "timestamp" : "2026-07-03T03:38:25.382076137Z"
+  }, {
+    "round" : 5,
+    "accuracy" : 0.81,
+    "loss" : 0.450429,
+    "evalTimeMs" : 2385,
+    "timestamp" : "2026-07-03T03:38:36.009766462Z"
+  }, {
+    "round" : 6,
+    "accuracy" : 0.814,
+    "loss" : 0.448247,
+    "evalTimeMs" : 2591,
+    "timestamp" : "2026-07-03T03:38:46.823443717Z"
+  }, {
+    "round" : 7,
+    "accuracy" : 0.814667,
+    "loss" : 0.44666,
+    "evalTimeMs" : 2148,
+    "timestamp" : "2026-07-03T03:38:57.366026847Z"
+  }, {
+    "round" : 8,
+    "accuracy" : 0.815667,
+    "loss" : 0.445402,
+    "evalTimeMs" : 3650,
+    "timestamp" : "2026-07-03T03:39:09.225112380Z"
+  }, {
+    "round" : 9,
+    "accuracy" : 0.815333,
+    "loss" : 0.444351,
+    "evalTimeMs" : 2605,
+    "timestamp" : "2026-07-03T03:39:20.037959885Z"
+  }, {
+    "round" : 10,
+    "accuracy" : 0.816333,
+    "loss" : 0.443473,
+    "evalTimeMs" : 3055,
+    "timestamp" : "2026-07-03T03:39:31.311223209Z"
+  }, {
+    "round" : 11,
+    "accuracy" : 0.816833,
+    "loss" : 0.442747,
+    "evalTimeMs" : 2733,
+    "timestamp" : "2026-07-03T03:39:42.279306214Z"
+  }, {
+    "round" : 12,
+    "accuracy" : 0.817833,
+    "loss" : 0.442099,
+    "evalTimeMs" : 995,
+    "timestamp" : "2026-07-03T03:39:51.648826219Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-3",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-4",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-5",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-6",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-7",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-8",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-9",
+    "recordedRounds" : 12
+  }, {
+    "clientId" : "client-10",
+    "recordedRounds" : 12
+  } ]
+}

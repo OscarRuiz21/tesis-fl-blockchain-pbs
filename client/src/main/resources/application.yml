@@ -1,0 +1,45 @@
+# Configuración del cliente FL; docker-compose sobreescribe por variables
+# de entorno.
+spring:
+  application:
+    name: fl-client
+
+server:
+  port: 8080
+
+fl:
+  anonymity-mode: ${FL_ANONYMITY_MODE:pbs}
+  # Base URL del AS (mTLS). El path /blind-sign/* se completa en ASGateway.
+  auth-server-url: ${FL_AUTH_SERVER_URL:https://fl-auth-server:8443}
+  polling-interval-ms: ${FL_POLLING_INTERVAL_MS:1000}
+  polling-timeout-ms: ${FL_POLLING_TIMEOUT_MS:300000}
+  # Un subdirectorio por experimentLabel.
+  metrics-output-dir: ${FL_METRICS_OUTPUT_DIR:/opt/results}
+  # Auditoría P4/P5: tras cada ronda el cliente verifica que H(Δw) está
+  # entre los hashes publicados (P4), recalcula el Tally Hash y lo compara
+  # con el del ledger (P5), y valida H(w_{r+1}). Resultado en el log y en
+  # audit-<clientId>.csv.
+  audit:
+    enabled: ${FL_AUDIT_ENABLED:true}
+    # strict=true aborta la corrida ante una discrepancia. Por omisión solo
+    # se registra; como las comprobaciones son byte a byte, un fallo indica
+    # manipulación y no ruido numérico.
+    strict: ${FL_AUDIT_STRICT:false}
+  # HOSTNAME da a cada réplica de fl-client su propio archivo dentro del
+  # bind mount compartido ./data/client-secrets:/data/secrets.
+  master-secret-path: ${FL_MASTER_SECRET_PATH:/data/secrets/master-secret-${HOSTNAME:fl-client}.bin}
+
+  fabric:
+    channel: ${FABRIC_CHANNEL:fl-channel}
+    chaincode: ${FABRIC_CHAINCODE:flprotocol}
+    msp-id: ${FABRIC_MSP_ID:Org2MSP}
+    peer-endpoint: ${FABRIC_PEER_ENDPOINT:peer0.org2.fl.network:7051}
+    peer-override-authority: ${FABRIC_PEER_OVERRIDE_AUTHORITY:peer0.org2.fl.network}
+    crypto-path: ${FABRIC_CRYPTO_PATH:/opt/fabric/organizations}
+    # Usuario bajo crypto-path/peerOrganizations/org2.fl.network/users/.
+    user: ${FABRIC_USER:User1}
+
+  python:
+    executable: ${PYTHON_EXECUTABLE:/opt/venv/bin/python}
+    script-path: ${PYTHON_SCRIPT_PATH:/opt/python/train.py}
+    timeout-minutes: ${PYTHON_TIMEOUT_MINUTES:10}

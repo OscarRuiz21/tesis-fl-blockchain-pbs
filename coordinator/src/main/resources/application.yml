@@ -1,0 +1,60 @@
+# Configuración del coordinator. Cada propiedad se puede sobrescribir con la
+# variable de entorno indicada.
+
+spring:
+  application:
+    name: coordinator
+
+server:
+  # 9100 y no 9000, que suele estar ocupado por MinIO en equipos de desarrollo.
+  port: ${COORDINATOR_PORT:9100}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Solo health, para el HEALTHCHECK del Dockerfile.
+        include: health
+
+fl:
+  # 'fabric' en operación; 'memory' para pruebas sin red Fabric.
+  adapter:
+    blockchain: ${FL_ADAPTER_BLOCKCHAIN:fabric}
+
+  auth-server-url: ${FL_AUTH_SERVER_URL:https://fl-auth-server:8443}
+
+  # Certificado mTLS del coordinator, generado por scripts/gen-certs.sh con
+  # CN=coordinator. El AS lo compara con auth.admin-cn en POST /admin/init.
+  coordinator-cert-path: ${COORDINATOR_CERT_PATH:/etc/fabric/coordinator/cert.pem}
+  coordinator-key-path: ${COORDINATOR_KEY_PATH:/etc/fabric/coordinator/key.pem}
+  coordinator-ca-path: ${COORDINATOR_CA_PATH:/etc/fabric/coordinator/ca.pem}
+
+  # URL de control de cada fl-client; el prefijo es el COMPOSE_PROJECT_NAME.
+  client-url-template: ${FL_CLIENT_URL_TEMPLATE:http://fl-pbs-fl-client-%d:8080}
+
+  polling-interval-ms: ${FL_POLLING_INTERVAL_MS:1000}
+  client-ready-timeout-ms: ${FL_CLIENT_READY_TIMEOUT_MS:60000}
+  global-timeout-ms: ${FL_GLOBAL_TIMEOUT_MS:600000}
+
+  fabric:
+    channel: ${FL_FABRIC_CHANNEL:fl-channel}
+    chaincode: ${FL_FABRIC_CHAINCODE:flprotocol}
+    msp-id: ${FL_FABRIC_MSP_ID:Org2MSP}
+    peer-endpoint: ${FL_FABRIC_PEER_ENDPOINT:peer0.org2.fl.network:7051}
+    peer-override-authority: ${FL_FABRIC_PEER_OVERRIDE_AUTHORITY:peer0.org2.fl.network}
+    crypto-path: ${FL_FABRIC_CRYPTO_PATH:/opt/fabric/organizations}
+    user: ${FL_FABRIC_USER:Admin}
+    org-domain: ${FL_FABRIC_ORG_DOMAIN:org2.fl.network}
+
+  # Evaluación del modelo global con eval.py.
+  python:
+    executable: ${FL_PYTHON_EXECUTABLE:/opt/venv/bin/python}
+    eval-script: ${FL_PYTHON_EVAL_SCRIPT:/opt/python/eval.py}
+
+  # Cada corrida escribe en un subdirectorio con su label.
+  results:
+    output-dir: ${FL_RESULTS_OUTPUT_DIR:/opt/results}
+
+logging:
+  level:
+    org.fl.coordinator: INFO

@@ -1,0 +1,42 @@
+{
+  "experimentLabel" : "gmsc-mlp-K2-R3-fedavg-pbs",
+  "k" : 2,
+  "totalRounds" : 3,
+  "strategy" : "fedavg",
+  "anonymityMode" : "pbs",
+  "seed" : 42,
+  "startedAt" : "2026-05-21T00:44:21.891623551Z",
+  "finishedAt" : "2026-05-21T00:45:44.568029381Z",
+  "clientsCompleted" : 2,
+  "clientsFailed" : 0,
+  "totalSeconds" : 82.676,
+  "roundsCompleted" : 3,
+  "finalAccuracy" : 0.8103,
+  "finalLoss" : 0.430511,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.798167,
+    "loss" : 0.443277,
+    "evalTimeMs" : 1265,
+    "timestamp" : "2026-05-21T00:44:53.900723386Z"
+  }, {
+    "round" : 2,
+    "accuracy" : 0.812667,
+    "loss" : 0.431797,
+    "evalTimeMs" : 1117,
+    "timestamp" : "2026-05-21T00:45:19.561005009Z"
+  }, {
+    "round" : 3,
+    "accuracy" : 0.8103,
+    "loss" : 0.430511,
+    "evalTimeMs" : 882,
+    "timestamp" : "2026-05-21T00:45:44.537550506Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 3
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 3
+  } ]
+}

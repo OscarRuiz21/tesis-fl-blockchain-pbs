@@ -1,0 +1,59 @@
+# GMSC, regresión logística, K=10, R=8, FedAvg, partición IID, sin anonimato (línea base), semilla 42.
+
+experiment:
+  label: "gmsc-B9-K10-R8-fedavg-none"
+  description: "GMSC, LR, K=10, R=8, FedAvg, IID, sin PBS"
+  seed: 42
+
+model:
+  name: "logistic_regression"
+  num_params: 11
+  hyperparams:
+    epochs: 3
+    lr: 0.05
+    batch_size: 64
+    strategy: "fedavg"
+    mu: 0.0
+    regularization: "l2"
+    reg_strength: 0.001
+    fit_intercept: true
+    balance_classes: true
+    normalization: "zscore"
+    target: "SeriousDlqin2yrs"
+    features:
+      - revolving_utilization
+      - age
+      - past_due_30_59
+      - debt_ratio
+      - monthly_income
+      - open_credit_lines
+      - past_due_90
+      - real_estate_loans
+      - past_due_60_89
+      - num_dependents
+
+dataset:
+  type: "tabular_csv"
+  name: "give_me_some_credit"
+  base_path: "/opt/python/data/give_me_some_credit/partitions/K10_seed42_iid"
+  test_set_path: "/opt/python/data/give_me_some_credit/test.csv"
+
+partition:
+  strategy: "iid"
+
+federation:
+  num_clients: 10
+  num_rounds: 8
+  aggregation: "fedavg"
+  anonymity: "none"
+
+timeouts:
+  t_train_seconds: 180
+  t_round_seconds: 360
+  t_experiment_seconds: 3600
+
+output:
+  results_dir: "/opt/results/gmsc-B9-K10-R8-fedavg-none"
+  per_client_csv: true
+  global_eval_csv: true
+  run_summary_json: true

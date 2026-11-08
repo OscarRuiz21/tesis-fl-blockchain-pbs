@@ -1,0 +1,60 @@
+# GMSC, MLP [16,8], K=10, R=8, FedAvg, partición IID, sin anonimato (línea base), semilla 7.
+
+experiment:
+  label: "gmsc-mlp-K10-R8-fedavg-none-seed7"
+  description: "GMSC, MLP [16,8], K=10, R=8, FedAvg, IID, sin PBS, semilla 7"
+  seed: 7
+
+model:
+  name: "mlp"
+  num_params: 321
+  hyperparams:
+    epochs: 8
+    lr: 0.05
+    batch_size: 64
+    strategy: "fedavg"
+    mu: 0.0
+    regularization: "l2"
+    reg_strength: 0.0001
+    balance_classes: true
+    normalization: "zscore"
+    target: "SeriousDlqin2yrs"
+    hidden_dims: [16, 8]
+    dropout: 0.0
+    features:
+      - revolving_utilization
+      - age
+      - past_due_30_59
+      - debt_ratio
+      - monthly_income
+      - open_credit_lines
+      - past_due_90
+      - real_estate_loans
+      - past_due_60_89
+      - num_dependents
+
+dataset:
+  type: "tabular_csv"
+  name: "give_me_some_credit"
+  base_path: "/opt/python/data/give_me_some_credit/partitions/K10_seed7_iid"
+  test_set_path: "/opt/python/data/give_me_some_credit/test.csv"
+
+partition:
+  strategy: "iid"
+
+federation:
+  num_clients: 10
+  num_rounds: 8
+  aggregation: "fedavg"
+  anonymity: "none"
+
+timeouts:
+  t_train_seconds: 300
+  t_round_seconds: 600
+  t_experiment_seconds: 3600
+
+output:
+  results_dir: "/opt/results/gmsc-mlp-K10-R8-fedavg-none-seed7"
+  per_client_csv: true
+  global_eval_csv: true
+  run_summary_json: true

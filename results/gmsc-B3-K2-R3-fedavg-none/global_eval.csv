@@ -1,0 +1,4 @@
+experiment,round_id,accuracy,loss,eval_time_s,timestamp
+gmsc-B3-K2-R3-fedavg-none,1,0.795033,0.507254,1.207,2026-05-21T00:00:45.166132090Z
+gmsc-B3-K2-R3-fedavg-none,2,0.795033,0.507255,1.163,2026-05-21T00:00:53.734649303Z
+gmsc-B3-K2-R3-fedavg-none,3,0.795033,0.507255,0.907,2026-05-21T00:01:02.366862126Z

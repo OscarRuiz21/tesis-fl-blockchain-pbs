@@ -1,0 +1,30 @@
+{
+  "experimentLabel" : "uci-smoke-K2-R1",
+  "k" : 2,
+  "totalRounds" : 1,
+  "strategy" : "fedavg",
+  "anonymityMode" : "pbs",
+  "seed" : 42,
+  "startedAt" : "2026-07-03T03:21:19.065124509Z",
+  "finishedAt" : "2026-07-03T03:21:30.522014876Z",
+  "clientsCompleted" : 2,
+  "clientsFailed" : 0,
+  "totalSeconds" : 11.456,
+  "roundsCompleted" : 1,
+  "finalAccuracy" : 0.8085,
+  "finalLoss" : 0.472953,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.8085,
+    "loss" : 0.472953,
+    "evalTimeMs" : 997,
+    "timestamp" : "2026-07-03T03:21:30.501160126Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 1
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 1
+  } ]
+}

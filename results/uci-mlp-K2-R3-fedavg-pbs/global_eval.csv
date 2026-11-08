@@ -1,0 +1,4 @@
+experiment,round_id,accuracy,loss,eval_time_s,timestamp
+uci-mlp-K2-R3-fedavg-pbs,1,0.810667,0.451274,1.160,2026-07-03T03:32:28.240326500Z
+uci-mlp-K2-R3-fedavg-pbs,2,0.815667,0.444603,1.014,2026-07-03T03:32:37.365318462Z
+uci-mlp-K2-R3-fedavg-pbs,3,0.818000,0.441140,0.905,2026-07-03T03:32:46.418128758Z

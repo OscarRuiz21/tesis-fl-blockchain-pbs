@@ -1,0 +1,73 @@
+# UCI Credit Default, MLP [16,8], K=10, R=12, FedAvg, partición IID, anonimato PBS, semilla 42.
+
+experiment:
+  label: "uci-mlp-K10-R12-fedavg-pbs"
+  description: "UCI, MLP [16,8], K=10, R=12, FedAvg, IID, PBS"
+  seed: 42
+
+model:
+  name: "mlp"
+  num_params: 529
+  hyperparams:
+    epochs: 8
+    lr: 0.05
+    batch_size: 64
+    strategy: "fedavg"
+    mu: 0.0
+    regularization: "l2"
+    reg_strength: 0.0001
+    balance_classes: false
+    normalization: "zscore"
+    target: "default_next_month"
+    hidden_dims: [16, 8]
+    dropout: 0.0
+    features:
+      - limit_bal
+      - sex
+      - education
+      - marriage
+      - age
+      - pay_0
+      - pay_2
+      - pay_3
+      - pay_4
+      - pay_5
+      - pay_6
+      - bill_amt1
+      - bill_amt2
+      - bill_amt3
+      - bill_amt4
+      - bill_amt5
+      - bill_amt6
+      - pay_amt1
+      - pay_amt2
+      - pay_amt3
+      - pay_amt4
+      - pay_amt5
+      - pay_amt6
+
+dataset:
+  type: "tabular_csv"
+  name: "uci_credit"
+  base_path: "/opt/python/data/uci_credit/partitions/K10_seed42_iid"
+  test_set_path: "/opt/python/data/uci_credit/test.csv"
+
+partition:
+  strategy: "iid"
+
+federation:
+  num_clients: 10
+  num_rounds: 12
+  aggregation: "fedavg"
+  anonymity: "pbs"
+
+timeouts:
+  t_train_seconds: 300
+  t_round_seconds: 600
+  t_experiment_seconds: 3600
+
+output:
+  results_dir: "/opt/results/uci-mlp-K10-R12-fedavg-pbs"
+  per_client_csv: true
+  global_eval_csv: true
+  run_summary_json: true

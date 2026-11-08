@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'application'
+    // `peer lifecycle chaincode install` invoca `gradle shadowJar` dentro de la
+    // imagen ccenv para producir un fat-jar con todas las dependencias. Sin este
+    // plugin la tarea no existe y la instalación falla con
+    // "Task 'shadowJar' not found".
+    id 'com.gradleup.shadow' version '8.3.5'
+}
+
+// El Dockerfile empaqueta build/libs/chaincode.jar y lo arranca con `java -jar`;
+// desde Fabric 2.4.1 ContractRouter sirve como clase principal sin bootstrap propio.
+shadowJar {
+    // Nombre fijo, sin classifier ni versión: el Dockerfile y los scripts CCaaS
+    // copian `chaincode.jar` literalmente.
+    archiveBaseName = 'chaincode'
+    archiveClassifier = ''
+    archiveVersion = ''
+
+    // gRPC registra sus NameResolverProvider por SPI en META-INF/services/. Sin
+    // mergeServiceFiles() el fat-jar conserva solo el último archivo ('unix' por
+    // orden alfabético), se pierde 'dns' y el connect-back CCaaS falla con
+    // "Address types of NameResolver 'unix' for 'host:port' not supported".
+    mergeServiceFiles()
+
+    manifest {
+        attributes 'Main-Class': 'org.hyperledger.fabric.contract.ContractRouter'
+    }
+}
+
+group = 'org.fl.flprotocol'
+version = '1.0.0'
+
+java {
+    toolchain {
+        // Misma versión de JDK que el AS, el cliente y el coordinator.
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+    // Fabric Gateway publica algunos artefactos transitivos a través de JitPack.
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'org.hyperledger.fabric-chaincode-java:fabric-chaincode-shim:2.5.3'
+
+    // Versión fija y compartida con el AS, el cliente y el coordinator para que
+    // las operaciones EC y SHA-256 produzcan los mismos bytes en todos.
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
+
+    // Solo para la serialización de ContractInterface; el JSON de tiempos se arma
+    // con String.format para que sea determinista entre peers.
+    implementation 'com.owlike:genson:1.6'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
+
+    // Gradle 9.x exige declarar explícitamente el launcher de JUnit Platform.
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+
+}
+
+application {
+    mainClass = 'org.hyperledger.fabric.contract.ContractRouter'
+}

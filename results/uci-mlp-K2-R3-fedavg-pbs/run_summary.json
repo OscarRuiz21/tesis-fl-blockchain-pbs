@@ -1,0 +1,42 @@
+{
+  "experimentLabel" : "uci-mlp-K2-R3-fedavg-pbs",
+  "k" : 2,
+  "totalRounds" : 3,
+  "strategy" : "fedavg",
+  "anonymityMode" : "pbs",
+  "seed" : 42,
+  "startedAt" : "2026-07-03T03:32:13.000632048Z",
+  "finishedAt" : "2026-07-03T03:32:46.440366175Z",
+  "clientsCompleted" : 2,
+  "clientsFailed" : 0,
+  "totalSeconds" : 33.439,
+  "roundsCompleted" : 3,
+  "finalAccuracy" : 0.818,
+  "finalLoss" : 0.44114,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.810667,
+    "loss" : 0.451274,
+    "evalTimeMs" : 1160,
+    "timestamp" : "2026-07-03T03:32:28.240326500Z"
+  }, {
+    "round" : 2,
+    "accuracy" : 0.815667,
+    "loss" : 0.444603,
+    "evalTimeMs" : 1014,
+    "timestamp" : "2026-07-03T03:32:37.365318462Z"
+  }, {
+    "round" : 3,
+    "accuracy" : 0.818,
+    "loss" : 0.44114,
+    "evalTimeMs" : 905,
+    "timestamp" : "2026-07-03T03:32:46.418128758Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 3
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 3
+  } ]
+}

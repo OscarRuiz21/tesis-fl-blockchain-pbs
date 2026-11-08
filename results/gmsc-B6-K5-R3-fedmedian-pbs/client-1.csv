@@ -1,0 +1,4 @@
+round,clientId,phase1_blind_ms,phase1_unblind_ms,phase1_verify_ms,phase1_commit_rtt_ms,phase1_sign_rtt_ms,train_loss,train_accuracy,train_num_samples,train_duration_ms,phase2_submit_ms,phase3_triggered,phase3_duration_ms,chaincode_range_query_ms,chaincode_aggregation_ms,chaincode_tally_ms,chaincode_total_ms,round_wall_time_ms,phase3_poll_count,phase3_poll_ms,phase3_was_leader,phase3_leader_position
+1,client-1,48,0,12,74,50,0.923639,0.794833,24000,4890,2053,false,0,0,0,0,0,9855,5,62,false,1
+2,client-1,5,0,5,22,14,0.9143,0.795042,24000,4753,1864,false,0,0,0,0,0,9181,5,42,false,3
+3,client-1,16,0,6,21,13,0.9143,0.795042,24000,5350,1805,false,0,0,0,0,0,9384,4,34,false,4

@@ -1,0 +1,467 @@
+# Servicios del prototipo de pruebas: red HLF y aplicaciones.
+#
+# Red HLF:
+#   orderer{0,1,2}.fl.network         clúster Raft
+#   peer0.org1.fl.network             endorser pasivo
+#   peer0.org2.fl.network             endorser activo, al que se conectan clientes y coordinator
+#   cli                               herramientas peer y configtxgen
+#   chaincode.flprotocol.fl.network   servidor CCaaS (profile ccaas)
+# Aplicaciones:
+#   fl-auth-server, fl-client (escalado a K), coordinator
+# Portal (profiles portal y prep):
+#   fl-portal-backend, fl-portal-frontend, fl-data-prep
+#
+# La red se levanta con scripts/start-network.sh y se borra con
+# network/scripts/network-down.sh.
+
+networks:
+  fl-network:
+    name: fl-network
+    driver: bridge
+
+volumes:
+  orderer0.fl.network:
+  orderer1.fl.network:
+  orderer2.fl.network:
+  peer0.org1.fl.network:
+  peer0.org2.fl.network:
+
+services:
+
+  orderer0.fl.network:
+    container_name: orderer0.fl.network
+    image: hyperledger/fabric-orderer:${FABRIC_VERSION:-2.5}
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=file
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/7050' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+    volumes:
+      - ./network/channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./network/organizations/ordererOrganizations/fl.network/orderers/orderer0.fl.network/msp:/var/hyperledger/orderer/msp
+      - ./network/organizations/ordererOrganizations/fl.network/orderers/orderer0.fl.network/tls/:/var/hyperledger/orderer/tls
+      - orderer0.fl.network:/var/hyperledger/production/orderer
+    ports:
+      - "7050:7050"
+    networks: [fl-network]
+
+  orderer1.fl.network:
+    container_name: orderer1.fl.network
+    image: hyperledger/fabric-orderer:${FABRIC_VERSION:-2.5}
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=file
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/7050' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+    volumes:
+      - ./network/channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./network/organizations/ordererOrganizations/fl.network/orderers/orderer1.fl.network/msp:/var/hyperledger/orderer/msp
+      - ./network/organizations/ordererOrganizations/fl.network/orderers/orderer1.fl.network/tls/:/var/hyperledger/orderer/tls
+      - orderer1.fl.network:/var/hyperledger/production/orderer
+    ports:
+      - "8050:7050"
+    networks: [fl-network]
+
+  orderer2.fl.network:
+    container_name: orderer2.fl.network
+    image: hyperledger/fabric-orderer:${FABRIC_VERSION:-2.5}
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=file
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/7050' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+    volumes:
+      - ./network/channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./network/organizations/ordererOrganizations/fl.network/orderers/orderer2.fl.network/msp:/var/hyperledger/orderer/msp
+      - ./network/organizations/ordererOrganizations/fl.network/orderers/orderer2.fl.network/tls/:/var/hyperledger/orderer/tls
+      - orderer2.fl.network:/var/hyperledger/production/orderer
+    ports:
+      - "9050:7050"
+    networks: [fl-network]
+
+  # Peer de Org1, endorser pasivo.
+  peer0.org1.fl.network:
+    container_name: peer0.org1.fl.network
+    image: hyperledger/fabric-peer:${FABRIC_VERSION:-2.5}
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fl-network
+      - CORE_PEER_ID=peer0.org1.fl.network
+      - CORE_PEER_ADDRESS=peer0.org1.fl.network:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.fl.network:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.fl.network:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.fl.network:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_LEDGER_STATE_STATEDATABASE=goleveldb
+    working_dir: /root
+    command: peer node start
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./network/organizations/peerOrganizations/org1.fl.network/peers/peer0.org1.fl.network/msp:/etc/hyperledger/fabric/msp
+      - ./network/organizations/peerOrganizations/org1.fl.network/peers/peer0.org1.fl.network/tls:/etc/hyperledger/fabric/tls
+      - peer0.org1.fl.network:/var/hyperledger/production
+    ports:
+      - "7051:7051"
+    networks: [fl-network]
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/7051' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
+
+  # Peer de Org2, endorser activo.
+  peer0.org2.fl.network:
+    container_name: peer0.org2.fl.network
+    image: hyperledger/fabric-peer:${FABRIC_VERSION:-2.5}
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fl-network
+      - CORE_PEER_ID=peer0.org2.fl.network
+      - CORE_PEER_ADDRESS=peer0.org2.fl.network:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org2.fl.network:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.fl.network:9051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.fl.network:9051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_LEDGER_STATE_STATEDATABASE=goleveldb
+    working_dir: /root
+    command: peer node start
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./network/organizations/peerOrganizations/org2.fl.network/peers/peer0.org2.fl.network/msp:/etc/hyperledger/fabric/msp
+      - ./network/organizations/peerOrganizations/org2.fl.network/peers/peer0.org2.fl.network/tls:/etc/hyperledger/fabric/tls
+      - peer0.org2.fl.network:/var/hyperledger/production
+    ports:
+      - "9051:9051"
+    networks: [fl-network]
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/9051' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
+
+  # Identidad por defecto: Admin@org2.fl.network. Los scripts sobrescriben
+  # CORE_PEER_* con docker exec -e para operar como Org1.
+  cli:
+    container_name: fl-network-cli
+    image: hyperledger/fabric-tools:${FABRIC_VERSION:-2.5}
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ADDRESS=peer0.org2.fl.network:9051
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/fabric/organizations/peerOrganizations/org2.fl.network/peers/peer0.org2.fl.network/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/fabric/organizations/peerOrganizations/org2.fl.network/users/Admin@org2.fl.network/msp
+    working_dir: /opt/fabric
+    command: /bin/bash
+    volumes:
+      - ./network/organizations:/opt/fabric/organizations
+      - ./network/channel-artifacts:/opt/fabric/channel-artifacts
+      - ./chaincode/flprotocol:/opt/chaincode/flprotocol
+    depends_on:
+      - peer0.org1.fl.network
+      - peer0.org2.fl.network
+      - orderer0.fl.network
+      - orderer1.fl.network
+      - orderer2.fl.network
+    networks: [fl-network]
+
+  # Chaincode-as-a-Service: el chaincode corre como servidor gRPC en su propio
+  # contenedor y el peer no lo construye por docker.sock (con el jar de 38 MB,
+  # Docker Desktop en macOS cortaba la conexión). deploy-chaincode.sh fija
+  # CHAINCODE_ID (etiqueta:hash) después del install. Solo arranca con el
+  # profile ccaas.
+  chaincode.flprotocol.fl.network:
+    container_name: chaincode.flprotocol.fl.network
+    image: flprotocol-chaincode:1.0
+    profiles: ["ccaas"]
+    environment:
+      - CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+      # Aunque en CCaaS el id llega en el paquete, el ContractRouter del shim
+      # valida CORE_CHAINCODE_ID_NAME y termina si está vacío.
+      - CORE_CHAINCODE_ID_NAME=${CHAINCODE_ID:-}
+      # El shim 2.5.x se conecta de vuelta al peer aun en CCaaS y necesita
+      # una CORE_PEER_ADDRESS válida.
+      - CORE_PEER_ADDRESS=peer0.org2.fl.network:9051
+      - CORE_PEER_TLS_ENABLED=false
+    networks: [fl-network]
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/9999' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  # Servidor de autenticación (AS).
+  fl-auth-server:
+    image: fl-auth-server
+    build: ./as
+    container_name: fl-auth-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - AUTH_ADMIN_CN=${AUTH_ADMIN_CN:-coordinator}
+      # Par de llaves del AS; sobrevive a los reinicios del contenedor.
+      - AUTH_KEYPAIR_PATH=/secrets/as-keypair.pem
+    volumes:
+      # Certificado TLS de servidor, CN=fl-auth-server (scripts/gen-certs.sh)
+      - ./network/as-tls:/etc/fabric/as:ro
+      # CA TLS de Org2, para validar los certificados de cliente
+      - ./network/organizations/peerOrganizations/org2.fl.network/tlsca:/etc/fabric/tlsca:ro
+      - ./secrets:/secrets:rw
+    ports:
+      - "${AUTH_SERVER_PORT:-8443}:8443"
+    networks: [fl-network]
+    healthcheck:
+      # TCP-only: el AS exige cert mTLS y los binarios HTTP del contenedor no lo tienen.
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/8443' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+
+  # Cliente FL, escalado con --scale fl-client=K.
+  fl-client:
+    image: fl-client
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - FL_AUTH_SERVER_URL=https://fl-auth-server:8443
+      # Identidad MSP de Org2, compartida por los clientes
+      - FL_FABRIC_MSP_ID=Org2MSP
+      - FL_FABRIC_PEER_ENDPOINT=peer0.org2.fl.network:9051
+      - FL_FABRIC_PEER_OVERRIDE_AUTHORITY=peer0.org2.fl.network
+      - FL_FABRIC_CHANNEL=fl-channel
+      - FL_FABRIC_CHAINCODE=flprotocol
+    volumes:
+      # Material MSP para Fabric Gateway
+      - ./network/organizations:/opt/fabric/organizations:ro
+      # Particiones generadas por simulate_clients.py
+      - ./python/data:/opt/python/data:ro
+      # Scripts de Python
+      - ./python:/opt/python:ro
+      # CSV de métricas por cliente
+      - ./results:/opt/results
+      # master_secret de cada réplica en /data/secrets/master-secret-<HOSTNAME>.bin.
+      # Sobrevive a un reinicio del contenedor, así el cliente conserva los
+      # nulificadores que ya registró.
+      - ./data/client-secrets:/data/secrets:rw
+    depends_on:
+      fl-auth-server:
+        condition: service_healthy
+      peer0.org2.fl.network:
+        condition: service_healthy
+    networks: [fl-network]
+
+  # Coordinator: recibe POST /experiments/run, inicializa el contrato y el AS,
+  # manda el start a los clientes y evalúa el modelo global de cada ronda.
+  coordinator:
+    image: fl-coordinator
+    build:
+      context: .
+      dockerfile: coordinator/Dockerfile
+    container_name: coordinator
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - AUTH_ADMIN_CN=${AUTH_ADMIN_CN:-coordinator}
+      - FL_AUTH_SERVER_URL=https://fl-auth-server:8443
+      - FL_FABRIC_MSP_ID=Org2MSP
+      - FL_FABRIC_PEER_ENDPOINT=peer0.org2.fl.network:9051
+      - FL_FABRIC_PEER_OVERRIDE_AUTHORITY=peer0.org2.fl.network
+      - FL_FABRIC_CHANNEL=fl-channel
+      - FL_FABRIC_CHAINCODE=flprotocol
+      # URL de cada cliente para POST /lifecycle/start (índice desde 1)
+      - FL_CLIENT_URL_TEMPLATE=http://${COMPOSE_PROJECT_NAME:-fl-pbs}-fl-client-%d:8080
+      # Timeout global del experimento (10 min por defecto; subirlo para K o R grandes).
+      - FL_GLOBAL_TIMEOUT_MS=${FL_GLOBAL_TIMEOUT_MS:-600000}
+    volumes:
+      # Scripts de Python (eval.py)
+      - ./python:/opt/python:ro
+      - ./python/data:/opt/python/data:ro
+      # Material MSP para Fabric Gateway
+      - ./network/organizations:/opt/fabric/organizations:ro
+      # Certificado mTLS ante el AS, CN=coordinator (gen-certs.sh)
+      - ./network/coordinator-tls:/etc/fabric/coordinator:ro
+      # Resultados
+      - ./results:/opt/results
+      - ./reports:/opt/reports
+    ports:
+      - "${COORDINATOR_PORT:-9100}:9100"
+    depends_on:
+      fl-auth-server:
+        condition: service_healthy
+      fl-client:
+        condition: service_started
+      peer0.org2.fl.network:
+        condition: service_healthy
+    networks: [fl-network]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9100/actuator/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+
+  # Portal: interfaz web que prepara la infraestructura y lanza experimentos.
+  # No participa en el protocolo. Solo arranca con --profile portal.
+
+  fl-portal-backend:
+    image: fl-portal-backend
+    build: ./portal/backend
+    container_name: fl-pbs-portal-backend
+    profiles: ["portal"]
+    environment:
+      - PORTAL_COORDINATOR_URL=http://coordinator:9100
+      - PORTAL_PROJECT_ROOT=/app
+      - PORTAL_EXPERIMENTS_DIR=/app/experiments
+      - PORTAL_RESULTS_DIR=/app/results
+      - PORTAL_DATA_DIR=/app/data
+      - PORTAL_PYTHON_DIR=/app/python
+      - PORTAL_SCRIPTS_DIR=/app/scripts
+      - PORTAL_PORTAL_DATA_DIR=/app/portal-data
+      - PORTAL_CORS_ORIGINS=["http://localhost:3000"]
+      - PORTAL_COORDINATOR_VERIFY_TLS=false
+      # PORTAL_HOST_PROJECT_DIR es opcional: el preflight lo deduce del origen
+      # del mount /app/docker-compose.yml. Definirlo solo si esa detección falla.
+    volumes:
+      - ./experiments:/app/experiments:rw
+      - ./results:/app/results:ro
+      - ./data:/app/data:rw
+      - ./python:/app/python:ro
+      - ./scripts:/app/scripts:ro
+      - ./portal/portal-data:/app/portal-data:rw
+      # El preflight usa docker-compose.yml y .env para ajustar la
+      # infraestructura (docker compose up --scale fl-client=K) antes de cada corrida.
+      - ./docker-compose.yml:/app/docker-compose.yml:ro
+      - ./.env:/app/.env:ro
+      - ./network:/app/network:ro
+      - ./chaincode:/app/chaincode:ro
+      # Acceso al daemon de Docker; otorga privilegios altos al contenedor.
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "${PORTAL_BACKEND_PORT:-8000}:8000"
+    depends_on:
+      coordinator:
+        condition: service_healthy
+    networks: [fl-network]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  fl-portal-frontend:
+    image: fl-portal-frontend
+    build: ./portal/frontend
+    container_name: fl-pbs-portal-frontend
+    profiles: ["portal"]
+    environment:
+      # El navegador llama al backend directamente en localhost:8000; el
+      # backend permite CORS desde http://localhost:3000.
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "${PORTAL_FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      fl-portal-backend:
+        condition: service_healthy
+    # 127.0.0.1 explícito: el wget de BusyBox intenta primero ::1.
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    networks: [fl-network]
+
+  # Contenedor de un solo uso con el que el portal corre scripts/prepare-data.sh
+  # cuando faltan las particiones de un experimento (docker compose run --rm).
+  # Profile prep: no arranca por defecto.
+  fl-data-prep:
+    image: fl-data-prep
+    build:
+      context: .
+      dockerfile: Dockerfile.data-prep
+    profiles: ["prep"]
+    volumes:
+      - ./python:/workspace/python:rw
+      - ./scripts:/workspace/scripts:ro
+      - ./experiments:/workspace/experiments:ro
+    working_dir: /workspace
+    networks: [fl-network]

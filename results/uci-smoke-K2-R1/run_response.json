@@ -1,0 +1,1 @@
+{"label":"uci-smoke-K2-R1","k":2,"totalRounds":1,"finalAccuracy":0.8085,"finalLoss":0.472953,"totalSeconds":11.456,"runSummaryPath":"/opt/results/uci-smoke-K2-R1/run_summary.json","globalEvalCsvPath":"/opt/results/uci-smoke-K2-R1/global_eval.csv","clientsCsvDir":"/opt/results/uci-smoke-K2-R1"}

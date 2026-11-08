@@ -1,0 +1,1 @@
+{"label":"uci-B6-K5-R5-fedmedian-pbs","k":5,"totalRounds":5,"finalAccuracy":0.808833,"finalLoss":0.471491,"totalSeconds":42.358,"runSummaryPath":"/opt/results/uci-B6-K5-R5-fedmedian-pbs/run_summary.json","globalEvalCsvPath":"/opt/results/uci-B6-K5-R5-fedmedian-pbs/global_eval.csv","clientsCsvDir":"/opt/results/uci-B6-K5-R5-fedmedian-pbs"}

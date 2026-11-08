@@ -1,0 +1,59 @@
+# GMSC, regresión logística, K=2, R=3, FedMedian, partición IID, anonimato PBS, semilla 42.
+
+experiment:
+  label: "gmsc-B2-K2-R3-fedmedian-pbs"
+  description: "GMSC, LR, K=2, R=3, FedMedian, IID, PBS"
+  seed: 42
+
+model:
+  name: "logistic_regression"
+  num_params: 11
+  hyperparams:
+    epochs: 3
+    lr: 0.05
+    batch_size: 64
+    strategy: "fedavg"
+    mu: 0.0
+    regularization: "l2"
+    reg_strength: 0.001
+    fit_intercept: true
+    balance_classes: true
+    normalization: "zscore"
+    target: "SeriousDlqin2yrs"
+    features:
+      - revolving_utilization
+      - age
+      - past_due_30_59
+      - debt_ratio
+      - monthly_income
+      - open_credit_lines
+      - past_due_90
+      - real_estate_loans
+      - past_due_60_89
+      - num_dependents
+
+dataset:
+  type: "tabular_csv"
+  name: "give_me_some_credit"
+  base_path: "/opt/python/data/give_me_some_credit/partitions/K2_seed42_iid"
+  test_set_path: "/opt/python/data/give_me_some_credit/test.csv"
+
+partition:
+  strategy: "iid"
+
+federation:
+  num_clients: 2
+  num_rounds: 3
+  aggregation: "fedmedian"
+  anonymity: "pbs"
+
+timeouts:
+  t_train_seconds: 120
+  t_round_seconds: 240
+  t_experiment_seconds: 1200
+
+output:
+  results_dir: "/opt/results/gmsc-B2-K2-R3-fedmedian-pbs"
+  per_client_csv: true
+  global_eval_csv: true
+  run_summary_json: true

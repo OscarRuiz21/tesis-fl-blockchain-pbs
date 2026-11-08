@@ -1,0 +1,128 @@
+# Entrada de configtxgen: organizaciones, consenso y perfiles del canal.
+#
+# Topología: OrdererOrg con 3 orderers Raft (orderer0..2.fl.network:7050),
+# Org1 con peer0.org1.fl.network:7051 y Org2 con peer0.org2.fl.network:9051,
+# ambas en el canal fl-channel.
+#
+# La política de endorsement del chaincode no se declara aquí: la fija
+# deploy-chaincode.sh en el commit con --signature-policy "$ENDORSEMENT_POLICY".
+#
+# Los AnchorPeers declarados abajo no quedan aplicados al crear el canal en
+# Fabric 2.5; scripts/apply-anchor-peers.sh los publica después.
+
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: ../organizations/ordererOrganizations/fl.network/msp
+    Policies:
+      Readers: { Type: Signature, Rule: "OR('OrdererMSP.member')" }
+      Writers: { Type: Signature, Rule: "OR('OrdererMSP.member')" }
+      Admins:  { Type: Signature, Rule: "OR('OrdererMSP.admin')" }
+    OrdererEndpoints:
+      - orderer0.fl.network:7050
+      - orderer1.fl.network:7050
+      - orderer2.fl.network:7050
+
+  - &Org1
+    Name: Org1MSP
+    ID: Org1MSP
+    MSPDir: ../organizations/peerOrganizations/org1.fl.network/msp
+    Policies:
+      Readers:     { Type: Signature, Rule: "OR('Org1MSP.admin','Org1MSP.peer','Org1MSP.client')" }
+      Writers:     { Type: Signature, Rule: "OR('Org1MSP.admin','Org1MSP.client')" }
+      Admins:      { Type: Signature, Rule: "OR('Org1MSP.admin')" }
+      Endorsement: { Type: Signature, Rule: "OR('Org1MSP.peer')" }
+    AnchorPeers:
+      - Host: peer0.org1.fl.network
+        Port: 7051
+
+  - &Org2
+    Name: Org2MSP
+    ID: Org2MSP
+    MSPDir: ../organizations/peerOrganizations/org2.fl.network/msp
+    Policies:
+      Readers:     { Type: Signature, Rule: "OR('Org2MSP.admin','Org2MSP.peer','Org2MSP.client')" }
+      Writers:     { Type: Signature, Rule: "OR('Org2MSP.admin','Org2MSP.client')" }
+      Admins:      { Type: Signature, Rule: "OR('Org2MSP.admin')" }
+      Endorsement: { Type: Signature, Rule: "OR('Org2MSP.peer')" }
+    AnchorPeers:
+      - Host: peer0.org2.fl.network
+        Port: 9051
+
+Capabilities:
+  Channel: &ChannelCapabilities { V2_0: true }
+  Orderer: &OrdererCapabilities { V2_0: true }
+  Application: &ApplicationCapabilities { V2_5: true }
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:              { Type: ImplicitMeta, Rule: "ANY Readers" }
+    Writers:              { Type: ImplicitMeta, Rule: "ANY Writers" }
+    Admins:               { Type: ImplicitMeta, Rule: "MAJORITY Admins" }
+    LifecycleEndorsement: { Type: ImplicitMeta, Rule: "MAJORITY Endorsement" }
+    Endorsement:          { Type: ImplicitMeta, Rule: "MAJORITY Endorsement" }
+  Capabilities: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses:
+    - orderer0.fl.network:7050
+    - orderer1.fl.network:7050
+    - orderer2.fl.network:7050
+  EtcdRaft:
+    Consenters:
+      - Host: orderer0.fl.network
+        Port: 7050
+        ClientTLSCert: ../organizations/ordererOrganizations/fl.network/orderers/orderer0.fl.network/tls/server.crt
+        ServerTLSCert: ../organizations/ordererOrganizations/fl.network/orderers/orderer0.fl.network/tls/server.crt
+      - Host: orderer1.fl.network
+        Port: 7050
+        ClientTLSCert: ../organizations/ordererOrganizations/fl.network/orderers/orderer1.fl.network/tls/server.crt
+        ServerTLSCert: ../organizations/ordererOrganizations/fl.network/orderers/orderer1.fl.network/tls/server.crt
+      - Host: orderer2.fl.network
+        Port: 7050
+        ClientTLSCert: ../organizations/ordererOrganizations/fl.network/orderers/orderer2.fl.network/tls/server.crt
+        ServerTLSCert: ../organizations/ordererOrganizations/fl.network/orderers/orderer2.fl.network/tls/server.crt
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:         { Type: ImplicitMeta, Rule: "ANY Readers" }
+    Writers:         { Type: ImplicitMeta, Rule: "ANY Writers" }
+    Admins:          { Type: ImplicitMeta, Rule: "MAJORITY Admins" }
+    BlockValidation: { Type: ImplicitMeta, Rule: "ANY Writers" }
+  Capabilities: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers: { Type: ImplicitMeta, Rule: "ANY Readers" }
+    Writers: { Type: ImplicitMeta, Rule: "ANY Writers" }
+    Admins:  { Type: ImplicitMeta, Rule: "MAJORITY Admins" }
+  Capabilities: *ChannelCapabilities
+
+Profiles:
+  # Bloque génesis del orderer (canal de sistema).
+  FlOrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations: [ *OrdererOrg ]
+      Capabilities: *OrdererCapabilities
+    Consortiums:
+      FlConsortium:
+        Organizations: [ *Org1, *Org2 ]
+
+  # Canal fl-channel, donde se despliega flprotocol. Incluye a Org1 y Org2
+  # para que ambas puedan endosar si la política lo requiere.
+  FlChannel:
+    <<: *ChannelDefaults
+    Consortium: FlConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations: [ *Org1, *Org2 ]
+      Capabilities: *ApplicationCapabilities

@@ -1,0 +1,1 @@
+{"label":"uci-mlp-K10-R12-fedavg-pbs","k":10,"totalRounds":12,"finalAccuracy":0.817833,"finalLoss":0.44208,"totalSeconds":145.522,"runSummaryPath":"/opt/results/uci-mlp-K10-R12-fedavg-pbs/run_summary.json","globalEvalCsvPath":"/opt/results/uci-mlp-K10-R12-fedavg-pbs/global_eval.csv","clientsCsvDir":"/opt/results/uci-mlp-K10-R12-fedavg-pbs"}

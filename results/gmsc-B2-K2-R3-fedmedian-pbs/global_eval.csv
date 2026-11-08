@@ -1,0 +1,4 @@
+experiment,round_id,accuracy,loss,eval_time_s,timestamp
+gmsc-B2-K2-R3-fedmedian-pbs,1,0.795033,0.507254,1.042,2026-05-20T23:59:53.829745844Z
+gmsc-B2-K2-R3-fedmedian-pbs,2,0.795033,0.507255,1.114,2026-05-21T00:00:02.032946126Z
+gmsc-B2-K2-R3-fedmedian-pbs,3,0.795033,0.507255,0.834,2026-05-21T00:00:10.532549588Z

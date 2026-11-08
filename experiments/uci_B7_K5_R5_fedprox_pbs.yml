@@ -1,0 +1,72 @@
+# UCI Credit Default, regresión logística, K=5, R=5, FedProx (mu=0.01), partición IID, anonimato PBS, semilla 42.
+
+experiment:
+  label: "uci-B7-K5-R5-fedprox-pbs"
+  description: "UCI, LR, K=5, R=5, FedProx (μ=0.01), IID, PBS"
+  seed: 42
+
+model:
+  name: "logistic_regression"
+  num_params: 24
+  hyperparams:
+    epochs: 3
+    lr: 0.05
+    batch_size: 64
+    strategy: "fedprox"
+    mu: 0.01
+    regularization: "l2"
+    reg_strength: 0.001
+    fit_intercept: true
+    balance_classes: false
+    normalization: "zscore"
+    target: "default_next_month"
+    features:
+      - limit_bal
+      - sex
+      - education
+      - marriage
+      - age
+      - pay_0
+      - pay_2
+      - pay_3
+      - pay_4
+      - pay_5
+      - pay_6
+      - bill_amt1
+      - bill_amt2
+      - bill_amt3
+      - bill_amt4
+      - bill_amt5
+      - bill_amt6
+      - pay_amt1
+      - pay_amt2
+      - pay_amt3
+      - pay_amt4
+      - pay_amt5
+      - pay_amt6
+
+dataset:
+  type: "tabular_csv"
+  name: "uci_credit"
+  base_path: "/opt/python/data/uci_credit/partitions/K5_seed42_iid"
+  test_set_path: "/opt/python/data/uci_credit/test.csv"
+
+partition:
+  strategy: "iid"
+
+federation:
+  num_clients: 5
+  num_rounds: 5
+  aggregation: "fedprox"
+  anonymity: "pbs"
+
+timeouts:
+  t_train_seconds: 120
+  t_round_seconds: 240
+  t_experiment_seconds: 1800
+
+output:
+  results_dir: "/opt/results/uci-B7-K5-R5-fedprox-pbs"
+  per_client_csv: true
+  global_eval_csv: true
+  run_summary_json: true

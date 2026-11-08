@@ -1,0 +1,51 @@
+{
+  "experimentLabel" : "gmsc-B6-K5-R3-fedmedian-pbs",
+  "k" : 5,
+  "totalRounds" : 3,
+  "strategy" : "fedmedian",
+  "anonymityMode" : "pbs",
+  "seed" : 42,
+  "startedAt" : "2026-05-21T00:02:09.640181796Z",
+  "finishedAt" : "2026-05-21T00:02:43.447979756Z",
+  "clientsCompleted" : 5,
+  "clientsFailed" : 0,
+  "totalSeconds" : 33.807,
+  "roundsCompleted" : 3,
+  "finalAccuracy" : 0.795567,
+  "finalLoss" : 0.505855,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.795433,
+    "loss" : 0.505742,
+    "evalTimeMs" : 1436,
+    "timestamp" : "2026-05-21T00:02:25.115418095Z"
+  }, {
+    "round" : 2,
+    "accuracy" : 0.795567,
+    "loss" : 0.505851,
+    "evalTimeMs" : 1376,
+    "timestamp" : "2026-05-21T00:02:34.075798460Z"
+  }, {
+    "round" : 3,
+    "accuracy" : 0.795567,
+    "loss" : 0.505855,
+    "evalTimeMs" : 930,
+    "timestamp" : "2026-05-21T00:02:43.376449423Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 3
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 3
+  }, {
+    "clientId" : "client-3",
+    "recordedRounds" : 3
+  }, {
+    "clientId" : "client-4",
+    "recordedRounds" : 3
+  }, {
+    "clientId" : "client-5",
+    "recordedRounds" : 3
+  } ]
+}

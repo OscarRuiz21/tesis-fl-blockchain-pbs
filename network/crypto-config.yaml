@@ -1,0 +1,34 @@
+# Entrada de cryptogen: identidades MSP y TLS de la red.
+#
+# OrdererOrg: orderer0, orderer1 y orderer2.
+# Org1: peer0.org1, endorser pasivo. El AS no usa Fabric Gateway; Org1
+#   existe para que peer0.org1 pueda endosar si la política pasa a AND.
+# Org2: peer0.org2, al que se conectan el coordinator y los clientes FL.
+
+OrdererOrgs:
+  - Name: Orderer
+    Domain: fl.network
+    Specs:
+      - Hostname: orderer0
+      - Hostname: orderer1
+      - Hostname: orderer2
+
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.fl.network
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1   # User1@org1, no se usa en tiempo de ejecución
+
+  - Name: Org2
+    Domain: org2.fl.network
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      # User1..User20: User_i es la identidad mTLS de client-i ante el AS.
+      # 20 es la cota superior de K en los escenarios. Admin@org2 es la
+      # identidad que usan el coordinator y Fabric Gateway.
+      Count: 20

@@ -1,0 +1,4 @@
+experiment,round_id,accuracy,loss,eval_time_s,timestamp
+gmsc-B4-K2-R3-dirichlet-pbs,1,0.800433,0.496590,1.093,2026-05-21T00:01:34.321567502Z
+gmsc-B4-K2-R3-dirichlet-pbs,2,0.800467,0.496612,1.047,2026-05-21T00:01:41.939477464Z
+gmsc-B4-K2-R3-dirichlet-pbs,3,0.800467,0.496612,0.881,2026-05-21T00:01:49.302404967Z

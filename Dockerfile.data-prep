@@ -1,0 +1,31 @@
+# Imagen ligera con la que el portal corre scripts/prepare-data.sh
+# (docker compose run --rm). No incluye torch: particionar no lo necesita.
+FROM python:3.11-slim
+
+RUN apt-get update -qq \
+ && apt-get install -y --no-install-recommends \
+        curl bash ca-certificates \
+ && ARCH="$(dpkg --print-architecture)" \
+ && case "$ARCH" in \
+        amd64) YQ_BIN=yq_linux_amd64 ;; \
+        arm64) YQ_BIN=yq_linux_arm64 ;; \
+        *) echo "Unsupported arch: $ARCH"; exit 1 ;; \
+    esac \
+ && curl -fsSL "https://github.com/mikefarah/yq/releases/latest/download/${YQ_BIN}" \
+        -o /usr/local/bin/yq \
+ && chmod +x /usr/local/bin/yq \
+ && apt-get remove -y curl && apt-get autoremove -y \
+ && rm -rf /var/lib/apt/lists/*
+
+# Mismas versiones que el venv del host.
+RUN pip install --no-cache-dir \
+        "numpy==2.1.3" \
+        "pandas==2.2.3" \
+        "scikit-learn==1.5.2"
+
+WORKDIR /workspace
+ENV PYTHON=python3 PYTHONUNBUFFERED=1 PYTHONPATH=/workspace
+
+# Montajes (docker-compose.yml): ./python, ./scripts y ./experiments en /workspace.
+
+ENTRYPOINT ["bash"]

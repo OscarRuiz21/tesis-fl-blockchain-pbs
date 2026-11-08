@@ -1,0 +1,2 @@
+experiment,round_id,accuracy,loss,eval_time_s,timestamp
+uci-smoke-K2-R1,1,0.808500,0.472953,0.997,2026-07-03T03:21:30.501160126Z

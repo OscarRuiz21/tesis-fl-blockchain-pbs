@@ -1,0 +1,4 @@
+experiment,round_id,accuracy,loss,eval_time_s,timestamp
+gmsc-B7-K5-R3-fedprox-pbs,1,0.793300,0.508551,1.438,2026-05-21T00:03:19.745501551Z
+gmsc-B7-K5-R3-fedprox-pbs,2,0.797500,0.504828,1.352,2026-05-21T00:03:29.291101388Z
+gmsc-B7-K5-R3-fedprox-pbs,3,0.797800,0.504715,0.928,2026-05-21T00:03:38.556420670Z

@@ -1,0 +1,63 @@
+{
+  "experimentLabel" : "uci-B1-K5-R5-fedavg-pbs",
+  "k" : 5,
+  "totalRounds" : 5,
+  "strategy" : "fedavg",
+  "anonymityMode" : "pbs",
+  "seed" : 42,
+  "startedAt" : "2026-07-03T03:21:51.123022427Z",
+  "finishedAt" : "2026-07-03T03:22:33.514044877Z",
+  "clientsCompleted" : 5,
+  "clientsFailed" : 0,
+  "totalSeconds" : 42.391,
+  "roundsCompleted" : 5,
+  "finalAccuracy" : 0.808167,
+  "finalLoss" : 0.471894,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.805833,
+    "loss" : 0.478907,
+    "evalTimeMs" : 1672,
+    "timestamp" : "2026-07-03T03:22:06.161877712Z"
+  }, {
+    "round" : 2,
+    "accuracy" : 0.807667,
+    "loss" : 0.4729,
+    "evalTimeMs" : 1606,
+    "timestamp" : "2026-07-03T03:22:12.880864048Z"
+  }, {
+    "round" : 3,
+    "accuracy" : 0.807333,
+    "loss" : 0.472237,
+    "evalTimeMs" : 1909,
+    "timestamp" : "2026-07-03T03:22:19.923916510Z"
+  }, {
+    "round" : 4,
+    "accuracy" : 0.807667,
+    "loss" : 0.472026,
+    "evalTimeMs" : 1393,
+    "timestamp" : "2026-07-03T03:22:27.462598638Z"
+  }, {
+    "round" : 5,
+    "accuracy" : 0.808167,
+    "loss" : 0.471894,
+    "evalTimeMs" : 899,
+    "timestamp" : "2026-07-03T03:22:33.449223960Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 5
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 5
+  }, {
+    "clientId" : "client-3",
+    "recordedRounds" : 5
+  }, {
+    "clientId" : "client-4",
+    "recordedRounds" : 5
+  }, {
+    "clientId" : "client-5",
+    "recordedRounds" : 5
+  } ]
+}

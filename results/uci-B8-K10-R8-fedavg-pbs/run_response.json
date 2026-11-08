@@ -1,0 +1,1 @@
+{"label":"uci-B8-K10-R8-fedavg-pbs","k":10,"totalRounds":8,"finalAccuracy":0.807333,"finalLoss":0.472008,"totalSeconds":67.989,"runSummaryPath":"/opt/results/uci-B8-K10-R8-fedavg-pbs/run_summary.json","globalEvalCsvPath":"/opt/results/uci-B8-K10-R8-fedavg-pbs/global_eval.csv","clientsCsvDir":"/opt/results/uci-B8-K10-R8-fedavg-pbs"}

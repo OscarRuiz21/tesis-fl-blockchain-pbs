@@ -1,0 +1,35 @@
+# Configuración del AS; cada valor admite override por variable de entorno.
+
+spring:
+  application:
+    name: as
+
+server:
+  port: 8443
+  ssl:
+    # mTLS obligatorio; los tests lo desactivan con server.ssl.enabled=false.
+    enabled: true
+    # Montados en el contenedor: el keystore guarda certificado y llave del AS;
+    # el truststore, la CA del experimento con la que se validan los clientes.
+    key-store: ${SSL_KEYSTORE_PATH:/etc/fabric/as/server.keystore.p12}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD:changeit}
+    key-store-type: PKCS12
+    trust-store: ${SSL_TRUSTSTORE_PATH:/etc/fabric/as/truststore.p12}
+    trust-store-password: ${SSL_TRUSTSTORE_PASSWORD:changeit}
+    trust-store-type: PKCS12
+    client-auth: need
+
+auth:
+  # TTL de las sesiones de firma en memoria (minutos).
+  session-ttl-minutes: ${AUTH_SESSION_TTL_MINUTES:10}
+  # Cada cuánto se purgan las sesiones expiradas (ms).
+  cleanup-interval-ms: ${AUTH_CLEANUP_INTERVAL_MS:60000}
+  # PEM con el par de llaves del AS; sobrevive reinicios. Para rotar la llave,
+  # borrar el archivo y reiniciar.
+  keypair-path: ${AUTH_KEYPAIR_PATH:/secrets/as-keypair.pem}
+  # CN del certificado mTLS autorizado a invocar POST /admin/init.
+  admin-cn: ${AUTH_ADMIN_CN:coordinator}
+
+logging:
+  level:
+    org.fl.as: INFO

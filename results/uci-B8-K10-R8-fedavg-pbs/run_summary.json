@@ -1,0 +1,96 @@
+{
+  "experimentLabel" : "uci-B8-K10-R8-fedavg-pbs",
+  "k" : 10,
+  "totalRounds" : 8,
+  "strategy" : "fedavg",
+  "anonymityMode" : "pbs",
+  "seed" : 42,
+  "startedAt" : "2026-07-03T03:23:00.661412709Z",
+  "finishedAt" : "2026-07-03T03:24:08.650718796Z",
+  "clientsCompleted" : 10,
+  "clientsFailed" : 0,
+  "totalSeconds" : 67.989,
+  "roundsCompleted" : 8,
+  "finalAccuracy" : 0.807333,
+  "finalLoss" : 0.472008,
+  "globalEvals" : [ {
+    "round" : 1,
+    "accuracy" : 0.8055,
+    "loss" : 0.502499,
+    "evalTimeMs" : 4816,
+    "timestamp" : "2026-07-03T03:23:20.803231052Z"
+  }, {
+    "round" : 2,
+    "accuracy" : 0.805333,
+    "loss" : 0.478663,
+    "evalTimeMs" : 2433,
+    "timestamp" : "2026-07-03T03:23:26.400409888Z"
+  }, {
+    "round" : 3,
+    "accuracy" : 0.806167,
+    "loss" : 0.474076,
+    "evalTimeMs" : 2447,
+    "timestamp" : "2026-07-03T03:23:33.013530627Z"
+  }, {
+    "round" : 4,
+    "accuracy" : 0.805833,
+    "loss" : 0.472834,
+    "evalTimeMs" : 2598,
+    "timestamp" : "2026-07-03T03:23:40.866555256Z"
+  }, {
+    "round" : 5,
+    "accuracy" : 0.806167,
+    "loss" : 0.4724,
+    "evalTimeMs" : 3037,
+    "timestamp" : "2026-07-03T03:23:48.039045884Z"
+  }, {
+    "round" : 6,
+    "accuracy" : 0.8075,
+    "loss" : 0.472204,
+    "evalTimeMs" : 2492,
+    "timestamp" : "2026-07-03T03:23:55.671198846Z"
+  }, {
+    "round" : 7,
+    "accuracy" : 0.807167,
+    "loss" : 0.47209,
+    "evalTimeMs" : 2408,
+    "timestamp" : "2026-07-03T03:24:02.258341585Z"
+  }, {
+    "round" : 8,
+    "accuracy" : 0.807333,
+    "loss" : 0.472008,
+    "evalTimeMs" : 1138,
+    "timestamp" : "2026-07-03T03:24:08.526300879Z"
+  } ],
+  "clients" : [ {
+    "clientId" : "client-1",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-2",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-3",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-4",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-5",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-6",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-7",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-8",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-9",
+    "recordedRounds" : 8
+  }, {
+    "clientId" : "client-10",
+    "recordedRounds" : 8
+  } ]
+}
